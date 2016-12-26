@@ -22,27 +22,10 @@ module.exports = function (grunt) {
 
   grunt.registerMultiTask('webfont', 'Compile separate SVG files to webfont', function () {
 
-    /**
-     * Winston to Grunt logger adapter.
-     */
-    var logger = {
-      warn: function () {
-        grunt.log.warn.apply(null, arguments);
-      },
-      error: function () {
-        grunt.warn.apply(null, arguments);
-      },
-      log: function () {
-        grunt.log.writeln.apply(null, arguments);
-      },
-      verbose: function () {
-        grunt.verbose.writeln.apply(null, arguments);
-      }
-    };
-
     var allDone = this.async();
     var params = this.data;
     var options = this.options();
+    var logger = options.logger;
     var md5 = crypto.createHash('md5');
 
     /*
@@ -227,7 +210,7 @@ module.exports = function (grunt) {
       });
 
       // Options
-      md5.update(JSON.stringify(o));
+      md5.update(JSON.stringify(_.pick(o, _.difference(_.keys(o), ['logger']))));
 
       // grunt-webfont version
       var packageJson = require('../package.json');
